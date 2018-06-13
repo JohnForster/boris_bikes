@@ -7,11 +7,13 @@ class DockingStation
   #   5.times { @bikes << Bike.new }
   # end
 
-  attr_accessor :bike
+  attr_reader :bike
 
   def release_bike
     Bike.new
   end
 
-  def dock(bike); end
+  def dock(bike)
+    @bike = bike
+  end
 end

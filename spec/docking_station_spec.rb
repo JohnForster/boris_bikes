@@ -3,21 +3,27 @@ require './lib/docking_station.rb'
 describe DockingStation do
   before do
   end
-
-  docking_station = DockingStation.new
-  bike = docking_station.release_bike
-
   it { should respond_to(:release_bike) }
   it 'should be able to release a bike' do
-    expect(bike.class).to eq Bike
+    expect(subject.release_bike.class).to eq Bike
   end
   it 'the released bike should be working' do
-    expect(bike.working?).to eq true
+    expect(subject.release_bike.working?).to eq true
   end
   it 'should respond to docking' do
-    docking_station.should respond_to(:dock).with(1).argument
+    subject.should respond_to(:dock).with(1).argument
   end
-  it 'should be able to list docked bikes' do
-    docking_station.should respond_to(:bike)
+  it 'should be respond to #bike' do
+    subject.should respond_to(:bike)
+  end
+  it 'docks something' do
+    bike = Bike.new
+    # We want to return the bike we dock
+    expect(subject.dock(bike)).to eq bike
+  end
+  it 'returns docked bike(s)' do
+    bike = Bike.new
+    subject.dock(bike)
+    expect(subject.bike).to eq bike
   end
 end
