@@ -60,4 +60,29 @@ describe DockingStation do
     expect { 10.times { dc2.release_bike } }.not_to raise_error
     expect { dc2.release_bike }.to raise_error 'No bike to release.'
   end
+
+  it 'should be possible to report a bike as broken' do
+    expect(subject).to respond_to(:report_broken)
+  end
+
+  it "a reported bike should know it's broken" do
+    bike = Bike.new
+    subject.report_broken(bike)
+    expect(bike.working?).to eq false
+  end
+
+  it 'should be possible to dock a broken bike' do
+    bike = Bike.new
+    subject.report_broken(bike)
+    expect(subject.dock(bike)).to eq bike
+  end
+
+  it 'should not be possible to release a broken bike' do
+    bike = Bike.new
+    subject.report_broken(bike)
+    subject.dock(bike)
+    expect do
+      subject.release_bike
+    end.to raise_error "Bike is broken, and so can't be released."
+  end
 end

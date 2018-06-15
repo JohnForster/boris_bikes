@@ -19,6 +19,10 @@ class DockingStation
     @bikes.release_bike
   end
 
+  def report_broken(bike)
+    bike.break
+  end
+
   def dock(bike)
     raise 'Docking station full.' if full?
     @bikes.add_bike(bike)
