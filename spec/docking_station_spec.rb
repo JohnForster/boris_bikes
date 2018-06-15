@@ -40,4 +40,24 @@ describe DockingStation do
     20.times { subject.dock(Bike.new) }
     expect { subject.dock(Bike.new) }.to raise_error('Docking station full.')
   end
+
+  it 'should have adaptable capacity' do
+    dc = DockingStation.new(capacity: 5)
+    expect { 5.times { dc.dock(Bike.new) } }.not_to raise_error
+    expect { dc.dock(Bike.new) }.to raise_error 'Docking station full.'
+
+    dc2 = DockingStation.new(capacity: 30)
+    expect { 30.times { dc2.dock(Bike.new) } }.not_to raise_error
+    expect { dc2.dock(Bike.new) }.to raise_error 'Docking station full.'
+  end
+
+  it 'should have adaptable occupation' do
+    dc = DockingStation.new(occupation: 5)
+    expect { 5.times { dc.release_bike } }.not_to raise_error
+    expect { dc.release_bike }.to raise_error 'No bike to release.'
+
+    dc2 = DockingStation.new(occupation: 10)
+    expect { 10.times { dc2.release_bike } }.not_to raise_error
+    expect { dc2.release_bike }.to raise_error 'No bike to release.'
+  end
 end
