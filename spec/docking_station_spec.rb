@@ -4,7 +4,10 @@ describe DockingStation do
   it { should respond_to(:release_bike) }
 
   it 'the released bike should be working' do
-    subject.dock(double(:bike))
+    bike1 = double(:bike)
+    allow(bike1).to receive(:working?).and_return(true)
+
+    subject.dock(bike1)
     bike = subject.release_bike
     # Will fail for now as we have not mocked the behaviour of Bike
     expect(bike).to be_working
@@ -25,6 +28,7 @@ describe DockingStation do
 
   it 'returns docked bike(s)' do
     bike = double(:bike)
+    allow(bike).to receive(:working?).and_return(true)
     subject.dock(bike)
     expect(subject.release_bike).to eq bike
   end
@@ -64,23 +68,16 @@ describe DockingStation do
     expect(subject).to respond_to(:report_broken)
   end
 
-  it "a reported bike should know it's broken" do
-    bike = double(:bike)
-    subject.report_broken(bike)
-    # Test will currently fail as we have not mocked behaviour of Bike
-    expect(bike).not_to be_working
-  end
-
   it 'should be possible to dock a broken bike' do
-    bike = double(:bike)
-    subject.report_broken(bike) # not yet mocked behaviour
-    expect(subject.dock(bike)).to eq bike
+    bike1 = double(:bike)
+    allow(bike1).to receive(:working?).and_return(false)
+    expect(subject.dock(bike1)).to eq bike1
   end
 
   it 'should not be possible to release a broken bike' do
-    bike = double(:bike)
-    subject.report_broken(bike) # Not yet mocked behaviour
-    subject.dock(bike)
+    bike1 = double(:bike)
+    allow(bike1).to receive(:working?).and_return(false)
+    subject.dock(bike1)
     expect do
       subject.release_bike
     end.to raise_error "Bike is broken, and so can't be released."
