@@ -1,22 +1,22 @@
 require './lib/bike.rb'
+require './lib/collection.rb'
 
 # The docking station for bikes in the Boris Bike project.
 class DockingStation
   def initialize
-    @bike = ''
+    @bikes = Collection.new
   end
 
-  attr_reader :bike
+  attr_reader :bikes
 
   def release_bike
-    raise 'No bike to release.' unless @bike
-    bike_to_return = @bike
-    @bike = nil
-    bike_to_return
+    raise 'No bike to release.' if @bikes.empty?
+    @bikes.release_bike
   end
 
   def dock(bike)
-    raise 'Docking station full.' if @bike
-    @bike = bike
+    raise 'Docking station full.' if @bikes.full?
+    @bikes.add_bike(bike)
+    bike
   end
 end
