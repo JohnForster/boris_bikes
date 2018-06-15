@@ -12,8 +12,7 @@ describe Collection do
   end
 
   it 'should release a stored bike' do
-    bike1 = double(:bike)
-    allow(bike1).to receive(:working?).and_return(true)
+    bike1 = double(:bike, :working? => true)
     subject.add_bike(bike1)
     expect(subject.release_bike).to eq bike1
     expect(subject.bike_array.size).to eq 0
