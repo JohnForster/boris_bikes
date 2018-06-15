@@ -20,7 +20,7 @@ class DockingStation
   end
 
   def report_broken(bike)
-    bike.break
+    bike.working = false
   end
 
   def dock(bike)

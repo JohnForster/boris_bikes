@@ -4,14 +4,7 @@ class Bike
     @working = true
   end
 
-  def break
-    @working = false
-  end
-
-  def fix
-    @working = true
-  end
-
+  attr_writer :working
   def working?
     @working
   end

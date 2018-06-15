@@ -3,14 +3,11 @@ require './lib/docking_station.rb'
 describe DockingStation do
   it { should respond_to(:release_bike) }
 
-  it 'should be able to release a bike' do
-    subject.dock(Bike.new)
-    expect(subject.release_bike.class).to eq Bike
-  end
-
   it 'the released bike should be working' do
-    subject.dock(Bike.new)
-    expect(subject.release_bike.working?).to eq true
+    subject.dock(double(:bike))
+    bike = subject.release_bike
+    # Will fail for now as we have not mocked the behaviour of Bike
+    expect(bike).to be_working
   end
 
   it 'should respond to #dock' do
@@ -22,12 +19,12 @@ describe DockingStation do
   end
 
   it 'docks something' do
-    bike = Bike.new
+    bike = double(:bike)
     expect(subject.dock(bike)).to eq bike
   end
 
   it 'returns docked bike(s)' do
-    bike = Bike.new
+    bike = double(:bike)
     subject.dock(bike)
     expect(subject.release_bike).to eq bike
   end
@@ -37,18 +34,20 @@ describe DockingStation do
   end
 
   it 'raises an error if you try to dock a bike into a full docking station' do
-    20.times { subject.dock(Bike.new) }
-    expect { subject.dock(Bike.new) }.to raise_error('Docking station full.')
+    20.times { subject.dock(double(:bike)) }
+    expect do
+      subject.dock(double(:bike))
+    end.to raise_error('Docking station full.')
   end
 
   it 'should have adaptable capacity' do
     dc = DockingStation.new(capacity: 5)
-    expect { 5.times { dc.dock(Bike.new) } }.not_to raise_error
-    expect { dc.dock(Bike.new) }.to raise_error 'Docking station full.'
+    expect { 5.times { dc.dock(double(:bike)) } }.not_to raise_error
+    expect { dc.dock(double(:bike)) }.to raise_error 'Docking station full.'
 
     dc2 = DockingStation.new(capacity: 30)
-    expect { 30.times { dc2.dock(Bike.new) } }.not_to raise_error
-    expect { dc2.dock(Bike.new) }.to raise_error 'Docking station full.'
+    expect { 30.times { dc2.dock(double(:bike)) } }.not_to raise_error
+    expect { dc2.dock(double(:bike)) }.to raise_error 'Docking station full.'
   end
 
   it 'should have adaptable occupation' do
@@ -66,20 +65,21 @@ describe DockingStation do
   end
 
   it "a reported bike should know it's broken" do
-    bike = Bike.new
+    bike = double(:bike)
     subject.report_broken(bike)
-    expect(bike.working?).to eq false
+    # Test will currently fail as we have not mocked behaviour of Bike
+    expect(bike).not_to be_working
   end
 
   it 'should be possible to dock a broken bike' do
-    bike = Bike.new
-    subject.report_broken(bike)
+    bike = double(:bike)
+    subject.report_broken(bike) # not yet mocked behaviour
     expect(subject.dock(bike)).to eq bike
   end
 
   it 'should not be possible to release a broken bike' do
-    bike = Bike.new
-    subject.report_broken(bike)
+    bike = double(:bike)
+    subject.report_broken(bike) # Not yet mocked behaviour
     subject.dock(bike)
     expect do
       subject.release_bike
