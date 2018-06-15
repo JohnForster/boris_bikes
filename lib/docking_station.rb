@@ -14,9 +14,12 @@ class DockingStation
 
   attr_reader :bikes
 
-  def release_bike
+  def release_bike(index = -1)
     raise 'No bike to release.' if empty?
-    @bikes.release_bike
+    unless @bikes.bike_array[index].working?
+      raise "Bike is broken, and so can't be released."
+    end
+    @bikes.release_bike(index)
   end
 
   def report_broken(bike)

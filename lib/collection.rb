@@ -9,9 +9,6 @@ class Collection
   attr_reader :bike_array
 
   def release_bike(index = -1)
-    unless @bike_array[index].working?
-      raise "Bike is broken, and so can't be released."
-    end
     @bike_array.delete_at(index)
   end
 
